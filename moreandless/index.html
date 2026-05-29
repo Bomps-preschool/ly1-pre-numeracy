@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>More and Less - LY1</title>
+
+<title>More and Less</title>
 
 <style>
+
 *{
 margin:0;
 padding:0;
@@ -14,11 +16,13 @@ font-family:Arial, sans-serif;
 }
 
 body{
-background:#f4fbff;
+background:#eef7ff;
 overflow:hidden;
-border:6px solid #FFD700;
 height:100vh;
+border:6px solid #FFD700;
 }
+
+/* SPLASH SCREEN */
 
 #splashScreen{
 position:fixed;
@@ -31,39 +35,40 @@ display:flex;
 flex-direction:column;
 justify-content:center;
 align-items:center;
-z-index:999;
+z-index:9999;
 }
 
 #splashScreen img{
-width:220px;
+width:250px;
 max-width:80%;
 }
 
 #splashScreen h1{
 margin-top:20px;
-color:#333;
-font-size:40px;
+font-size:48px;
+color:#1f4e79;
 }
+
+/* GAME AREA */
 
 #gameContainer{
 display:none;
-height:100vh;
 padding:15px;
+height:100vh;
 }
 
 .topBar{
+background:white;
+border-radius:20px;
+padding:15px;
 display:flex;
 justify-content:space-between;
 align-items:center;
-padding:10px;
-background:white;
-border-radius:15px;
-box-shadow:0 2px 10px rgba(0,0,0,0.1);
+box-shadow:0 3px 10px rgba(0,0,0,0.1);
 margin-bottom:15px;
 }
 
-.scoreBox,
-.timerBox{
+.scoreBox{
 font-size:22px;
 font-weight:bold;
 color:#333;
@@ -75,68 +80,76 @@ gap:10px;
 }
 
 .controls button{
-padding:10px 15px;
-border:none;
-border-radius:10px;
-cursor:pointer;
-font-size:16px;
 background:#4CAF50;
 color:white;
+border:none;
+padding:10px 15px;
+border-radius:10px;
+font-size:16px;
+cursor:pointer;
 }
 
 .controls button:hover{
-opacity:0.9;
+opacity:.9;
 }
 
 #questionText{
 text-align:center;
-font-size:34px;
+font-size:42px;
 font-weight:bold;
+color:#1f4e79;
 margin-top:10px;
 margin-bottom:20px;
-color:#1f4e79;
 }
+
+/* GROUPS */
 
 #groupsContainer{
 display:flex;
-justify-content:space-around;
-align-items:flex-start;
-gap:20px;
-margin-top:20px;
+justify-content:center;
+gap:30px;
 }
 
 .groupCard{
-width:45%;
+width:46%;
 background:white;
-border-radius:20px;
+border-radius:25px;
 padding:20px;
-text-align:center;
-box-shadow:0 4px 15px rgba(0,0,0,0.15);
-min-height:420px;
+min-height:330px;
+box-shadow:0 5px 15px rgba(0,0,0,.1);
+display:flex;
+flex-direction:column;
+justify-content:space-between;
+align-items:center;
 }
 
 .items{
 display:flex;
 flex-wrap:wrap;
 justify-content:center;
-gap:10px;
-min-height:250px;
+align-items:center;
+gap:15px;
+width:100%;
+padding-top:10px;
 }
 
+/* BIGGER IMAGES */
+
 .items img{
-width:70px;
-height:70px;
+width:95px;
+height:95px;
 object-fit:contain;
 }
 
+/* TICK CIRCLE */
+
 .selectCircle{
-width:80px;
-height:80px;
+width:90px;
+height:90px;
 border:5px solid #555;
 border-radius:50%;
-margin:25px auto 0;
 cursor:pointer;
-transition:0.3s;
+transition:.3s;
 background:white;
 }
 
@@ -145,13 +158,13 @@ transform:scale(1.05);
 }
 
 .correct{
-border-color:#00b300 !important;
-background:#b8ffb8 !important;
+background:#b9ffb9 !important;
+border-color:#0a9f00 !important;
 }
 
 .wrong{
-border-color:#ff0000 !important;
 background:#ffd6d6 !important;
+border-color:red !important;
 }
 
 .hintGlow{
@@ -159,24 +172,32 @@ animation:glow 1s infinite;
 }
 
 @keyframes glow{
+
 0%{
 box-shadow:0 0 5px gold;
 }
+
 50%{
-box-shadow:0 0 25px gold;
+box-shadow:0 0 30px gold;
 }
+
 100%{
 box-shadow:0 0 5px gold;
 }
+
 }
+
+/* RETRY */
 
 #retryBox{
 text-align:center;
-font-size:22px;
+font-size:28px;
 font-weight:bold;
-margin-top:15px;
 color:#d35400;
+margin-top:15px;
 }
+
+/* CONFETTI */
 
 #confetti{
 position:fixed;
@@ -185,8 +206,7 @@ left:0;
 width:100%;
 height:100%;
 pointer-events:none;
-overflow:hidden;
-z-index:500;
+z-index:999;
 }
 
 .confettiPiece{
@@ -197,15 +217,20 @@ animation:fall 3s linear forwards;
 }
 
 @keyframes fall{
+
 0%{
-transform:translateY(-50px) rotate(0deg);
+transform:translateY(-50px);
 opacity:1;
 }
+
 100%{
 transform:translateY(100vh) rotate(720deg);
 opacity:0;
 }
+
 }
+
+/* END SCREEN */
 
 #endScreen{
 display:none;
@@ -218,34 +243,55 @@ background:white;
 justify-content:center;
 align-items:center;
 flex-direction:column;
-z-index:1000;
+z-index:10000;
 }
 
 #endScreen h1{
-font-size:50px;
+font-size:60px;
 color:#2e8b57;
-margin-bottom:20px;
 text-align:center;
+margin-bottom:20px;
 }
 
 #finalScore{
-font-size:40px;
-margin-bottom:25px;
+font-size:42px;
+margin-bottom:20px;
 }
 
 #playAgainBtn{
-padding:15px 35px;
-font-size:24px;
-border:none;
-border-radius:15px;
 background:#28a745;
 color:white;
+border:none;
+padding:15px 35px;
+font-size:24px;
+border-radius:15px;
 cursor:pointer;
 }
 
-#playAgainBtn:hover{
-opacity:0.9;
+/* MOBILE */
+
+@media(max-width:900px){
+
+#groupsContainer{
+flex-direction:column;
+align-items:center;
 }
+
+.groupCard{
+width:95%;
+}
+
+.items img{
+width:90px;
+height:90px;
+}
+
+#questionText{
+font-size:30px;
+}
+
+}
+
 </style>
 </head>
 
@@ -254,8 +300,11 @@ opacity:0.9;
 <div id="confetti"></div>
 
 <div id="splashScreen">
-<img src="assets/innovinelogo.png" alt="Innovine Logo">
+
+<img src="assets/innovinelogo.png">
+
 <h1>More and Less</h1>
+
 </div>
 
 <div id="gameContainer">
@@ -266,13 +315,16 @@ opacity:0.9;
 Score: <span id="score">0</span>/8
 </div>
 
-<div class="timerBox">
-⏰ <span id="timer">20</span>
-</div>
-
 <div class="controls">
-<button id="muteBtn">🔊 Mute</button>
-<button id="restartBtn">🔄 Restart</button>
+
+<button id="muteBtn">
+🔊 Mute
+</button>
+
+<button id="restartBtn">
+🔄 Restart
+</button>
+
 </div>
 
 </div>
@@ -282,13 +334,22 @@ Score: <span id="score">0</span>/8
 <div id="groupsContainer">
 
 <div class="groupCard">
+
 <div id="leftItems" class="items"></div>
-<div id="leftCircle" class="selectCircle"></div>
+
+<div id="leftCircle"
+class="selectCircle"></div>
+
 </div>
 
 <div class="groupCard">
-<div id="rightItems" class="items"></div>
-<div id="rightCircle" class="selectCircle"></div>
+
+<div id="rightItems"
+class="items"></div>
+
+<div id="rightCircle"
+class="selectCircle"></div>
+
 </div>
 
 </div>
@@ -300,14 +361,24 @@ Retry Remaining: 1
 </div>
 
 <div id="endScreen">
-<h1>🎉 You Have Done a Great Job! 🎉</h1>
+
+<h1>
+🎉 You Have Done a Great Job! 🎉
+</h1>
+
 <div id="finalScore"></div>
-<button id="playAgainBtn">Play Again</button>
+
+<button id="playAgainBtn">
+Play Again
+</button>
+
 </div>
 <script>
 
 // =======================
-// GAME QUESTIONS
+// QUESTIONS
+// Preschool Friendly
+// Only 1–5 Objects
 // =======================
 
 const questions = [
@@ -315,16 +386,16 @@ const questions = [
 {
 instruction:"Tap the group that has more apples.",
 image:"apple.png",
-leftCount:3,
-rightCount:6,
+leftCount:2,
+rightCount:4,
 correct:"right"
 },
 
 {
 instruction:"Tap the group that has less balloons.",
 image:"balloon.png",
-leftCount:8,
-rightCount:4,
+leftCount:5,
+rightCount:2,
 correct:"right"
 },
 
@@ -339,23 +410,23 @@ correct:"right"
 {
 instruction:"Tap the group that has less flowers.",
 image:"flower.png",
-leftCount:7,
-rightCount:3,
+leftCount:4,
+rightCount:2,
 correct:"right"
 },
 
 {
 instruction:"Tap the group that has more stars.",
 image:"star.png",
-leftCount:4,
-rightCount:9,
+leftCount:2,
+rightCount:5,
 correct:"right"
 },
 
 {
 instruction:"Tap the group that has less fish.",
 image:"fish.png",
-leftCount:6,
+leftCount:5,
 rightCount:2,
 correct:"right"
 },
@@ -363,62 +434,82 @@ correct:"right"
 {
 instruction:"Tap the group that has more footballs.",
 image:"football.png",
-leftCount:3,
-rightCount:7,
+leftCount:2,
+rightCount:4,
 correct:"right"
 },
 
 {
 instruction:"Tap the group that has less butterflies.",
 image:"butterfly.png",
-leftCount:8,
-rightCount:5,
+leftCount:5,
+rightCount:2,
 correct:"right"
 }
 
 ];
 
 // =======================
-// VARIABLES
+// GAME VARIABLES
 // =======================
 
 let currentQuestion = 0;
 let score = 0;
-let retryRemaining = 1;
 let attempts = 0;
+let retryRemaining = 1;
 let muted = false;
-let timerValue = 20;
-let timerInterval = null;
+
+let voiceRepeatTimer;
 
 // =======================
 // ELEMENTS
 // =======================
 
-const splashScreen = document.getElementById("splashScreen");
-const gameContainer = document.getElementById("gameContainer");
+const splashScreen =
+document.getElementById("splashScreen");
 
-const questionText = document.getElementById("questionText");
+const gameContainer =
+document.getElementById("gameContainer");
 
-const leftItems = document.getElementById("leftItems");
-const rightItems = document.getElementById("rightItems");
+const leftItems =
+document.getElementById("leftItems");
 
-const leftCircle = document.getElementById("leftCircle");
-const rightCircle = document.getElementById("rightCircle");
+const rightItems =
+document.getElementById("rightItems");
 
-const scoreDisplay = document.getElementById("score");
-const timerDisplay = document.getElementById("timer");
+const leftCircle =
+document.getElementById("leftCircle");
 
-const retryBox = document.getElementById("retryBox");
+const rightCircle =
+document.getElementById("rightCircle");
 
-const muteBtn = document.getElementById("muteBtn");
-const restartBtn = document.getElementById("restartBtn");
+const questionText =
+document.getElementById("questionText");
 
-const endScreen = document.getElementById("endScreen");
-const finalScore = document.getElementById("finalScore");
-const playAgainBtn = document.getElementById("playAgainBtn");
+const retryBox =
+document.getElementById("retryBox");
+
+const scoreDisplay =
+document.getElementById("score");
+
+const muteBtn =
+document.getElementById("muteBtn");
+
+const restartBtn =
+document.getElementById("restartBtn");
+
+const endScreen =
+document.getElementById("endScreen");
+
+const finalScore =
+document.getElementById("finalScore");
+
+const playAgainBtn =
+document.getElementById("playAgainBtn");
 
 // =======================
-// WEB SPEECH API
+// VOICE INSTRUCTIONS
+// Web Speech API
 // =======================
 
 function speak(text){
@@ -427,10 +518,11 @@ if(muted) return;
 
 speechSynthesis.cancel();
 
-let speech = new SpeechSynthesisUtterance(text);
+const speech =
+new SpeechSynthesisUtterance(text);
 
-speech.rate = 0.9;
-speech.pitch = 1;
+speech.rate = 0.85;
+speech.pitch = 1.1;
 speech.volume = 1;
 
 speechSynthesis.speak(speech);
@@ -438,52 +530,125 @@ speechSynthesis.speak(speech);
 }
 
 // =======================
-// SIMPLE SOUND EFFECTS
+// REPEAT VOICE EVERY 5 SEC
+// =======================
+
+function startVoiceRepeat(text){
+
+clearInterval(
+voiceRepeatTimer
+);
+
+voiceRepeatTimer =
+setInterval(()=>{
+
+if(!muted){
+
+speak(text);
+
+}
+
+},5000);
+
+}
+
+function stopVoiceRepeat(){
+
+clearInterval(
+voiceRepeatTimer
+);
+
+}
+
+// =======================
+// CORRECT SOUND
 // =======================
 
 function playCorrectSound(){
 
 if(muted) return;
 
-const audioContext =
-new (window.AudioContext || window.webkitAudioContext)();
+const audioCtx =
+new (window.AudioContext ||
+window.webkitAudioContext)();
 
-const oscillator =
-audioContext.createOscillator();
+const osc =
+audioCtx.createOscillator();
 
-oscillator.type = "sine";
-oscillator.frequency.value = 800;
+const gain =
+audioCtx.createGain();
 
-oscillator.connect(audioContext.destination);
+osc.type = "sine";
 
-oscillator.start();
+osc.frequency.value = 800;
 
-setTimeout(()=>{
-oscillator.stop();
-},200);
+osc.connect(gain);
+
+gain.connect(
+audioCtx.destination
+);
+
+osc.start();
+
+gain.gain.setValueAtTime(
+0.3,
+audioCtx.currentTime
+);
+
+gain.gain.exponentialRampToValueAtTime(
+0.0001,
+audioCtx.currentTime + 0.5
+);
+
+osc.stop(
+audioCtx.currentTime + 0.5
+);
 
 }
+
+// =======================
+// WRONG SOUND
+// =======================
 
 function playWrongSound(){
 
 if(muted) return;
 
-const audioContext =
-new (window.AudioContext || window.webkitAudioContext)();
+const audioCtx =
+new (window.AudioContext ||
+window.webkitAudioContext)();
 
-const oscillator =
-audioContext.createOscillator();
+const osc =
+audioCtx.createOscillator();
 
-oscillator.type = "square";
-oscillator.frequency.value = 220;
+const gain =
+audioCtx.createGain();
 
-oscillator.connect(audioContext.destination);
+osc.type = "square";
 
-oscillator.start();
+osc.frequency.value = 220;
 
-setTimeout(()=>{
-oscillator.stop();
-},250);
+osc.connect(gain);
+
+gain.connect(
+audioCtx.destination
+);
+
+osc.start();
+
+gain.gain.setValueAtTime(
+0.3,
+audioCtx.currentTime
+);
+
+gain.gain.exponentialRampToValueAtTime(
+0.0001,
+audioCtx.currentTime + 0.5
+);
+
+osc.stop(
+audioCtx.currentTime + 0.5
+);
 
 }
 
@@ -494,59 +659,75 @@ oscillator.stop();
 function launchConfetti(){
 
 const container =
-document.getElementById("confetti");
+document.getElementById(
+"confetti"
+);
 
-for(let i=0;i<80;i++){
+for(let i=0;i<100;i++){
 
-let piece =
+const piece =
 document.createElement("div");
 
-piece.classList.add("confettiPiece");
+piece.classList.add(
+"confettiPiece"
+);
 
 piece.style.left =
 Math.random()*100 + "%";
 
+piece.style.top =
+"-20px";
+
 piece.style.background =
-`hsl(${Math.random()*360},100%,50%)`;
+`hsl(${Math.random()*360},
+100%,50%)`;
 
 piece.style.animationDuration =
-(2 + Math.random()*2) + "s";
+(2 + Math.random()*2)
++ "s";
 
-container.appendChild(piece);
+container.appendChild(
+piece
+);
 
 setTimeout(()=>{
+
 piece.remove();
+
 },4000);
 
 }
 
 }
+
 // =======================
 // SPLASH SCREEN
 // =======================
 
 setTimeout(()=>{
 
-splashScreen.style.display="none";
-gameContainer.style.display="block";
+splashScreen.style.display =
+"none";
+
+gameContainer.style.display =
+"block";
 
 loadQuestion();
 
 },10000);
-
+//
 // =======================
 // LOAD QUESTION
 // =======================
+//
 
 function loadQuestion(){
-
-clearInterval(timerInterval);
 
 attempts = 0;
 retryRemaining = 1;
 
 retryBox.innerHTML =
-"Retry Remaining: " + retryRemaining;
+"Retry Remaining: 1";
 
 leftCircle.className =
 "selectCircle";
@@ -554,10 +735,8 @@ leftCircle.className =
 rightCircle.className =
 "selectCircle";
 
-timerValue = 20;
-
-timerDisplay.innerHTML =
-timerValue;
+leftItems.innerHTML = "";
+rightItems.innerHTML = "";
 
 const q =
 questions[currentQuestion];
@@ -565,101 +744,121 @@ questions[currentQuestion];
 questionText.innerHTML =
 q.instruction;
 
-speak(q.instruction);
+// Speak Instruction
 
-leftItems.innerHTML = "";
-rightItems.innerHTML = "";
+speak(
+q.instruction
+);
 
-// LEFT GROUP
+// Repeat Instruction
 
-for(let i=0;i<q.leftCount;i++){
+startVoiceRepeat(
+q.instruction
+);
 
-let img =
+// LEFT SIDE IMAGES
+
+for(let i=0;
+i<q.leftCount;
+i++){
+
+const img =
 document.createElement("img");
 
 img.src =
 "assets/" + q.image;
 
-leftItems.appendChild(img);
+img.onerror = function(){
+
+this.style.display =
+"none";
+
+};
+
+leftItems.appendChild(
+img
+);
 
 }
 
-// RIGHT GROUP
+// RIGHT SIDE IMAGES
 
-for(let i=0;i<q.rightCount;i++){
+for(let i=0;
+i<q.rightCount;
+i++){
 
-let img =
+const img =
 document.createElement("img");
 
 img.src =
 "assets/" + q.image;
 
-rightItems.appendChild(img);
+img.onerror = function(){
+
+this.style.display =
+"none";
+
+};
+
+rightItems.appendChild(
+img
+);
 
 }
 
-startTimer();
-
 }
 
+//
 // =======================
-// TIMER
+// SELECT LEFT
 // =======================
-
-function startTimer(){
-
-timerInterval =
-setInterval(()=>{
-
-timerValue--;
-
-timerDisplay.innerHTML =
-timerValue;
-
-if(timerValue <= 0){
-
-clearInterval(timerInterval);
-
-handleWrong();
-
-}
-
-},1000);
-
-}
-
-// =======================
-// CIRCLE EVENTS
-// =======================
+//
 
 leftCircle.addEventListener(
 "click",
 ()=>{
 
-checkAnswer("left");
+checkAnswer(
+"left"
+);
 
 }
 );
+
+//
+// =======================
+// SELECT RIGHT
+// =======================
+//
 
 rightCircle.addEventListener(
 "click",
 ()=>{
 
-checkAnswer("right");
+checkAnswer(
+"right"
+);
 
 }
 );
 
+//
 // =======================
 // CHECK ANSWER
 // =======================
+//
 
-function checkAnswer(selected){
+function checkAnswer(
+selectedSide
+){
 
 const q =
 questions[currentQuestion];
 
-if(selected === q.correct){
+if(
+selectedSide ===
+q.correct
+){
 
 handleCorrect();
 
@@ -672,13 +871,15 @@ handleWrong();
 
 }
 
+//
 // =======================
 // CORRECT ANSWER
 // =======================
+//
 
 function handleCorrect(){
 
-clearInterval(timerInterval);
+stopVoiceRepeat();
 
 playCorrectSound();
 
@@ -692,7 +893,10 @@ score;
 const q =
 questions[currentQuestion];
 
-if(q.correct === "left"){
+if(
+q.correct ===
+"left"
+){
 
 leftCircle.classList.add(
 "correct"
@@ -707,7 +911,9 @@ rightCircle.classList.add(
 
 }
 
-speak("Great Job!");
+speak(
+"Great Job!"
+);
 
 setTimeout(()=>{
 
@@ -717,54 +923,56 @@ nextQuestion();
 
 }
 
+//
 // =======================
 // WRONG ANSWER
 // =======================
+//
 
 function handleWrong(){
 
-playWrongSound();
-
 attempts++;
 
-const q =
-questions[currentQuestion];
+playWrongSound();
 
-// FIRST WRONG
-
-if(attempts === 1){
+if(
+attempts === 1
+){
 
 retryRemaining = 0;
 
 retryBox.innerHTML =
 "Retry Remaining: 0";
 
+showHint();
+
 speak(
 "Try again"
 );
-
-showHint();
 
 return;
 
 }
 
-// SECOND WRONG
-
 showCorrectAnswer();
 
 }
 
+//
 // =======================
 // HINT SYSTEM
 // =======================
+//
 
 function showHint(){
 
 const q =
 questions[currentQuestion];
 
-if(q.correct === "left"){
+if(
+q.correct ===
+"left"
+){
 
 leftCircle.classList.add(
 "hintGlow"
@@ -779,24 +987,25 @@ rightCircle.classList.add(
 
 }
 
-speak(
-"Look carefully and try again."
-);
-
 }
 
+//
 // =======================
 // SHOW CORRECT ANSWER
 // =======================
+//
 
 function showCorrectAnswer(){
 
-clearInterval(timerInterval);
+stopVoiceRepeat();
 
 const q =
 questions[currentQuestion];
 
-if(q.correct === "left"){
+if(
+q.correct ===
+"left"
+){
 
 leftCircle.classList.remove(
 "hintGlow"
@@ -831,9 +1040,11 @@ nextQuestion();
 
 }
 
+//
 // =======================
 // NEXT QUESTION
 // =======================
+//
 
 function nextQuestion(){
 
@@ -853,11 +1064,15 @@ return;
 loadQuestion();
 
 }
+//
 // =======================
 // END SCREEN
 // =======================
+//
 
 function showEndScreen(){
+
+stopVoiceRepeat();
 
 gameContainer.style.display =
 "none";
@@ -879,13 +1094,15 @@ speak(
 
 }
 
+//
 // =======================
 // PLAY AGAIN
 // =======================
+//
 
 playAgainBtn.addEventListener(
 "click",
-()=>{
+function(){
 
 currentQuestion = 0;
 score = 0;
@@ -904,19 +1121,17 @@ loadQuestion();
 }
 );
 
+//
 // =======================
 // RESTART BUTTON
 // =======================
+//
 
 restartBtn.addEventListener(
 "click",
-()=>{
+function(){
 
-if(
-confirm(
-"Do you want to restart the game?"
-)
-){
+speechSynthesis.cancel();
 
 currentQuestion = 0;
 score = 0;
@@ -927,17 +1142,17 @@ scoreDisplay.innerHTML =
 loadQuestion();
 
 }
-
-}
 );
 
+//
 // =======================
 // MUTE / UNMUTE
 // =======================
+//
 
 muteBtn.addEventListener(
 "click",
-()=>{
+function(){
 
 muted = !muted;
 
@@ -954,71 +1169,66 @@ else{
 muteBtn.innerHTML =
 "🔊 Mute";
 
+speak(
+questions[currentQuestion]
+.instruction
+);
+
 }
 
 }
 );
 
+//
 // =======================
-// PREVENT DOUBLE CLICK
+// PREVENT DOUBLE TAPS
 // =======================
+//
 
-let canClick = true;
+let clickLock = false;
 
-function disableClicks(){
-
-canClick = false;
-
-setTimeout(()=>{
-
-canClick = true;
-
-},1000);
-
-}
-
-// =======================
-// IMPROVED ANSWER CHECK
-// =======================
-
-const originalCheckAnswer =
+const oldCheckAnswer =
 checkAnswer;
 
-checkAnswer = function(selected){
+checkAnswer = function(side){
 
-if(!canClick) return;
+if(clickLock) return;
 
-disableClicks();
+clickLock = true;
 
-originalCheckAnswer(selected);
+setTimeout(function(){
+
+clickLock = false;
+
+},800);
+
+oldCheckAnswer(side);
 
 };
 
+//
 // =======================
-// MOBILE SUPPORT
+// KEYBOARD SUPPORT
 // =======================
-
-document.addEventListener(
-"touchstart",
-function(){},
-{passive:true}
-);
-
-// =======================
-// ACCESSIBILITY
-// =======================
+//
 
 document.addEventListener(
 "keydown",
 function(e){
 
-if(e.key === "m"){
+if(
+e.key === "m" ||
+e.key === "M"
+){
 
 muteBtn.click();
 
 }
 
-if(e.key === "r"){
+if(
+e.key === "r" ||
+e.key === "R"
+){
 
 restartBtn.click();
 
@@ -1027,18 +1237,23 @@ restartBtn.click();
 }
 );
 
+//
 // =======================
-// INITIAL SCORE
+// START VALUES
 // =======================
+//
 
-scoreDisplay.innerHTML = "0";
+scoreDisplay.innerHTML =
+"0";
 
+//
 // =======================
-// CONSOLE MESSAGE
+// DEBUG
 // =======================
+//
 
 console.log(
-"More and Less Game Loaded Successfully"
+"More and Less Game Ready"
 );
 
 </script>
