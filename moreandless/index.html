@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
 <title>More and Less</title>
 
@@ -12,14 +13,14 @@
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:Arial, sans-serif;
+font-family:Arial,sans-serif;
 }
 
 body{
-background:#eef7ff;
-overflow:hidden;
+background:#eef8ff;
 height:100vh;
-border:6px solid #FFD700;
+overflow:hidden;
+border:5px solid #FFD700;
 }
 
 /* SPLASH SCREEN */
@@ -49,7 +50,7 @@ font-size:48px;
 color:#1f4e79;
 }
 
-/* GAME AREA */
+/* GAME */
 
 #gameContainer{
 display:none;
@@ -59,17 +60,17 @@ height:100vh;
 
 .topBar{
 background:white;
-border-radius:20px;
 padding:15px;
+border-radius:20px;
 display:flex;
 justify-content:space-between;
 align-items:center;
-box-shadow:0 3px 10px rgba(0,0,0,0.1);
+box-shadow:0 3px 10px rgba(0,0,0,.1);
 margin-bottom:15px;
 }
 
 .scoreBox{
-font-size:22px;
+font-size:26px;
 font-weight:bold;
 color:#333;
 }
@@ -83,22 +84,23 @@ gap:10px;
 background:#4CAF50;
 color:white;
 border:none;
-padding:10px 15px;
+padding:12px 18px;
 border-radius:10px;
-font-size:16px;
 cursor:pointer;
+font-size:16px;
 }
 
 .controls button:hover{
 opacity:.9;
 }
 
+/* QUESTION */
+
 #questionText{
-text-align:center;
 font-size:42px;
 font-weight:bold;
+text-align:center;
 color:#1f4e79;
-margin-top:10px;
 margin-bottom:20px;
 }
 
@@ -107,15 +109,15 @@ margin-bottom:20px;
 #groupsContainer{
 display:flex;
 justify-content:center;
-gap:30px;
+gap:25px;
 }
 
 .groupCard{
-width:46%;
+width:48%;
 background:white;
 border-radius:25px;
 padding:20px;
-min-height:330px;
+min-height:350px;
 box-shadow:0 5px 15px rgba(0,0,0,.1);
 display:flex;
 flex-direction:column;
@@ -128,12 +130,11 @@ display:flex;
 flex-wrap:wrap;
 justify-content:center;
 align-items:center;
-gap:15px;
+gap:12px;
 width:100%;
-padding-top:10px;
 }
 
-/* BIGGER IMAGES */
+/* PRESCHOOL IMAGE SIZE */
 
 .items img{
 width:95px;
@@ -141,29 +142,29 @@ height:95px;
 object-fit:contain;
 }
 
-/* TICK CIRCLE */
+/* SELECT CIRCLE */
 
 .selectCircle{
-width:90px;
-height:90px;
-border:5px solid #555;
+width:85px;
+height:85px;
+border:5px solid #666;
 border-radius:50%;
+background:white;
 cursor:pointer;
 transition:.3s;
-background:white;
 }
 
 .selectCircle:hover{
-transform:scale(1.05);
+transform:scale(1.08);
 }
 
 .correct{
-background:#b9ffb9 !important;
-border-color:#0a9f00 !important;
+background:#c6ffc6 !important;
+border-color:#00aa00 !important;
 }
 
 .wrong{
-background:#ffd6d6 !important;
+background:#ffd4d4 !important;
 border-color:red !important;
 }
 
@@ -193,8 +194,8 @@ box-shadow:0 0 5px gold;
 text-align:center;
 font-size:28px;
 font-weight:bold;
-color:#d35400;
 margin-top:15px;
+color:#d35400;
 }
 
 /* CONFETTI */
@@ -206,7 +207,7 @@ left:0;
 width:100%;
 height:100%;
 pointer-events:none;
-z-index:999;
+z-index:500;
 }
 
 .confettiPiece{
@@ -254,17 +255,17 @@ margin-bottom:20px;
 }
 
 #finalScore{
-font-size:42px;
-margin-bottom:20px;
+font-size:40px;
+margin-bottom:25px;
 }
 
 #playAgainBtn{
+padding:15px 40px;
+font-size:24px;
+border:none;
+border-radius:15px;
 background:#28a745;
 color:white;
-border:none;
-padding:15px 35px;
-font-size:24px;
-border-radius:15px;
 cursor:pointer;
 }
 
@@ -282,8 +283,8 @@ width:95%;
 }
 
 .items img{
-width:90px;
-height:90px;
+width:75px;
+height:75px;
 }
 
 #questionText{
@@ -293,19 +294,24 @@ font-size:30px;
 }
 
 </style>
+
 </head>
 
 <body>
 
 <div id="confetti"></div>
 
+<!-- SPLASH -->
+
 <div id="splashScreen">
 
-<img src="assets/innovinelogo.png">
+<img src="../assets/innovinelogo.png">
 
 <h1>More and Less</h1>
 
 </div>
+
+<!-- GAME -->
 
 <div id="gameContainer">
 
@@ -335,7 +341,8 @@ Score: <span id="score">0</span>/8
 
 <div class="groupCard">
 
-<div id="leftItems" class="items"></div>
+<div id="leftItems"
+class="items"></div>
 
 <div id="leftCircle"
 class="selectCircle"></div>
@@ -360,6 +367,8 @@ Retry Remaining: 1
 
 </div>
 
+<!-- END SCREEN -->
+
 <div id="endScreen">
 
 <h1>
@@ -377,8 +386,7 @@ Play Again
 
 // =======================
 // QUESTIONS
-// Preschool Friendly
-// Only 1–5 Objects
+// Using Your Actual Assets
 // =======================
 
 const questions = [
@@ -393,24 +401,24 @@ correct:"right"
 
 {
 instruction:"Tap the group that has less balloons.",
-image:"balloon.png",
-leftCount:5,
-rightCount:2,
-correct:"right"
+image:"balloons.png",
+leftCount:2,
+rightCount:5,
+correct:"left"
 },
 
 {
 instruction:"Tap the group that has more ducks.",
 image:"duck.png",
-leftCount:2,
-rightCount:5,
-correct:"right"
+leftCount:5,
+rightCount:2,
+correct:"left"
 },
 
 {
 instruction:"Tap the group that has less flowers.",
 image:"flower.png",
-leftCount:4,
+leftCount:5,
 rightCount:2,
 correct:"right"
 },
@@ -418,39 +426,39 @@ correct:"right"
 {
 instruction:"Tap the group that has more stars.",
 image:"star.png",
-leftCount:2,
-rightCount:5,
-correct:"right"
+leftCount:5,
+rightCount:2,
+correct:"left"
 },
 
 {
 instruction:"Tap the group that has less fish.",
 image:"fish.png",
-leftCount:5,
-rightCount:2,
-correct:"right"
+leftCount:2,
+rightCount:5,
+correct:"left"
 },
 
 {
 instruction:"Tap the group that has more footballs.",
 image:"football.png",
 leftCount:2,
-rightCount:4,
+rightCount:5,
 correct:"right"
 },
 
 {
 instruction:"Tap the group that has less butterflies.",
-image:"butterfly.png",
-leftCount:5,
-rightCount:2,
-correct:"right"
+image:"butterfly.jpg",
+leftCount:2,
+rightCount:5,
+correct:"left"
 }
 
 ];
 
 // =======================
-// GAME VARIABLES
+// VARIABLES
 // =======================
 
 let currentQuestion = 0;
@@ -459,7 +467,7 @@ let attempts = 0;
 let retryRemaining = 1;
 let muted = false;
 
-let voiceRepeatTimer;
+let voiceTimer;
 
 // =======================
 // ELEMENTS
@@ -508,8 +516,7 @@ const playAgainBtn =
 document.getElementById("playAgainBtn");
 
 // =======================
-// VOICE INSTRUCTIONS
-// Web Speech API
+// WEB SPEECH API
 // =======================
 
 function speak(text){
@@ -530,16 +537,17 @@ speechSynthesis.speak(speech);
 }
 
 // =======================
-// REPEAT VOICE EVERY 5 SEC
+// REPEAT INSTRUCTION
+// EVERY 6 SECONDS
 // =======================
 
 function startVoiceRepeat(text){
 
 clearInterval(
-voiceRepeatTimer
+voiceTimer
 );
 
-voiceRepeatTimer =
+voiceTimer =
 setInterval(()=>{
 
 if(!muted){
@@ -548,14 +556,14 @@ speak(text);
 
 }
 
-},5000);
+},6000);
 
 }
 
 function stopVoiceRepeat(){
 
 clearInterval(
-voiceRepeatTimer
+voiceTimer
 );
 
 }
@@ -568,40 +576,42 @@ function playCorrectSound(){
 
 if(muted) return;
 
-const audioCtx =
-new (window.AudioContext ||
-window.webkitAudioContext)();
+const ctx =
+new(
+window.AudioContext ||
+window.webkitAudioContext
+)();
 
 const osc =
-audioCtx.createOscillator();
+ctx.createOscillator();
 
 const gain =
-audioCtx.createGain();
+ctx.createGain();
 
 osc.type = "sine";
 
-osc.frequency.value = 800;
+osc.frequency.value = 850;
 
 osc.connect(gain);
 
 gain.connect(
-audioCtx.destination
+ctx.destination
 );
 
 osc.start();
 
 gain.gain.setValueAtTime(
 0.3,
-audioCtx.currentTime
+ctx.currentTime
 );
 
 gain.gain.exponentialRampToValueAtTime(
-0.0001,
-audioCtx.currentTime + 0.5
+0.001,
+ctx.currentTime + 0.5
 );
 
 osc.stop(
-audioCtx.currentTime + 0.5
+ctx.currentTime + 0.5
 );
 
 }
@@ -614,15 +624,17 @@ function playWrongSound(){
 
 if(muted) return;
 
-const audioCtx =
-new (window.AudioContext ||
-window.webkitAudioContext)();
+const ctx =
+new(
+window.AudioContext ||
+window.webkitAudioContext
+)();
 
 const osc =
-audioCtx.createOscillator();
+ctx.createOscillator();
 
 const gain =
-audioCtx.createGain();
+ctx.createGain();
 
 osc.type = "square";
 
@@ -631,23 +643,23 @@ osc.frequency.value = 220;
 osc.connect(gain);
 
 gain.connect(
-audioCtx.destination
+ctx.destination
 );
 
 osc.start();
 
 gain.gain.setValueAtTime(
 0.3,
-audioCtx.currentTime
+ctx.currentTime
 );
 
 gain.gain.exponentialRampToValueAtTime(
-0.0001,
-audioCtx.currentTime + 0.5
+0.001,
+ctx.currentTime + 0.5
 );
 
 osc.stop(
-audioCtx.currentTime + 0.5
+ctx.currentTime + 0.5
 );
 
 }
@@ -663,7 +675,11 @@ document.getElementById(
 "confetti"
 );
 
-for(let i=0;i<100;i++){
+for(
+let i=0;
+i<80;
+i++
+){
 
 const piece =
 document.createElement("div");
@@ -682,10 +698,6 @@ piece.style.background =
 `hsl(${Math.random()*360},
 100%,50%)`;
 
-piece.style.animationDuration =
-(2 + Math.random()*2)
-+ "s";
-
 container.appendChild(
 piece
 );
@@ -694,7 +706,7 @@ setTimeout(()=>{
 
 piece.remove();
 
-},4000);
+},3500);
 
 }
 
@@ -715,11 +727,9 @@ gameContainer.style.display =
 loadQuestion();
 
 },10000);
-//
 // =======================
 // LOAD QUESTION
 // =======================
-//
 
 function loadQuestion(){
 
@@ -744,34 +754,38 @@ questions[currentQuestion];
 questionText.innerHTML =
 q.instruction;
 
-// Speak Instruction
+// Voice
 
 speak(
 q.instruction
 );
 
-// Repeat Instruction
-
 startVoiceRepeat(
 q.instruction
 );
 
-// LEFT SIDE IMAGES
+// =======================
+// LEFT OBJECTS
+// =======================
 
-for(let i=0;
+for(
+let i=0;
 i<q.leftCount;
-i++){
+i++
+){
 
 const img =
 document.createElement("img");
 
 img.src =
-"assets/" + q.image;
+"../assets/" +
+q.image;
 
-img.onerror = function(){
+img.onerror =
+function(){
 
-this.style.display =
-"none";
+this.src =
+"../assets/apple.png";
 
 };
 
@@ -781,22 +795,28 @@ img
 
 }
 
-// RIGHT SIDE IMAGES
+// =======================
+// RIGHT OBJECTS
+// =======================
 
-for(let i=0;
+for(
+let i=0;
 i<q.rightCount;
-i++){
+i++
+){
 
 const img =
 document.createElement("img");
 
 img.src =
-"assets/" + q.image;
+"../assets/" +
+q.image;
 
-img.onerror = function(){
+img.onerror =
+function(){
 
-this.style.display =
-"none";
+this.src =
+"../assets/apple.png";
 
 };
 
@@ -808,15 +828,13 @@ img
 
 }
 
-//
 // =======================
-// SELECT LEFT
+// LEFT CLICK
 // =======================
-//
 
 leftCircle.addEventListener(
 "click",
-()=>{
+function(){
 
 checkAnswer(
 "left"
@@ -825,15 +843,13 @@ checkAnswer(
 }
 );
 
-//
 // =======================
-// SELECT RIGHT
+// RIGHT CLICK
 // =======================
-//
 
 rightCircle.addEventListener(
 "click",
-()=>{
+function(){
 
 checkAnswer(
 "right"
@@ -842,21 +858,19 @@ checkAnswer(
 }
 );
 
-//
 // =======================
 // CHECK ANSWER
 // =======================
-//
 
 function checkAnswer(
-selectedSide
+selected
 ){
 
 const q =
 questions[currentQuestion];
 
 if(
-selectedSide ===
+selected ===
 q.correct
 ){
 
@@ -871,11 +885,9 @@ handleWrong();
 
 }
 
-//
 // =======================
-// CORRECT ANSWER
+// CORRECT
 // =======================
-//
 
 function handleCorrect(){
 
@@ -923,17 +935,17 @@ nextQuestion();
 
 }
 
-//
 // =======================
-// WRONG ANSWER
+// WRONG
 // =======================
-//
 
 function handleWrong(){
 
 attempts++;
 
 playWrongSound();
+
+// FIRST WRONG
 
 if(
 attempts === 1
@@ -947,22 +959,22 @@ retryBox.innerHTML =
 showHint();
 
 speak(
-"Try again"
+"Try Again"
 );
 
 return;
 
 }
 
+// SECOND WRONG
+
 showCorrectAnswer();
 
 }
 
-//
 // =======================
-// HINT SYSTEM
+// HINT
 // =======================
-//
 
 function showHint(){
 
@@ -989,11 +1001,9 @@ rightCircle.classList.add(
 
 }
 
-//
 // =======================
-// SHOW CORRECT ANSWER
+// SHOW ANSWER
 // =======================
-//
 
 function showCorrectAnswer(){
 
@@ -1040,11 +1050,9 @@ nextQuestion();
 
 }
 
-//
 // =======================
 // NEXT QUESTION
 // =======================
-//
 
 function nextQuestion(){
 
@@ -1064,11 +1072,9 @@ return;
 loadQuestion();
 
 }
-//
 // =======================
 // END SCREEN
 // =======================
-//
 
 function showEndScreen(){
 
@@ -1094,18 +1100,20 @@ speak(
 
 }
 
-//
 // =======================
 // PLAY AGAIN
 // =======================
-//
 
 playAgainBtn.addEventListener(
 "click",
 function(){
 
+speechSynthesis.cancel();
+
 currentQuestion = 0;
 score = 0;
+attempts = 0;
+retryRemaining = 1;
 
 scoreDisplay.innerHTML =
 "0";
@@ -1121,11 +1129,9 @@ loadQuestion();
 }
 );
 
-//
 // =======================
-// RESTART BUTTON
+// RESTART
 // =======================
-//
 
 restartBtn.addEventListener(
 "click",
@@ -1135,6 +1141,8 @@ speechSynthesis.cancel();
 
 currentQuestion = 0;
 score = 0;
+attempts = 0;
+retryRemaining = 1;
 
 scoreDisplay.innerHTML =
 "0";
@@ -1144,11 +1152,9 @@ loadQuestion();
 }
 );
 
-//
 // =======================
 // MUTE / UNMUTE
 // =======================
-//
 
 muteBtn.addEventListener(
 "click",
@@ -1179,38 +1185,35 @@ questions[currentQuestion]
 }
 );
 
-//
 // =======================
 // PREVENT DOUBLE TAPS
 // =======================
-//
 
-let clickLock = false;
+let clickLocked = false;
 
-const oldCheckAnswer =
+const originalCheckAnswer =
 checkAnswer;
 
 checkAnswer = function(side){
 
-if(clickLock) return;
+if(clickLocked)
+return;
 
-clickLock = true;
+clickLocked = true;
 
-setTimeout(function(){
+setTimeout(()=>{
 
-clickLock = false;
+clickLocked = false;
 
-},800);
+},700);
 
-oldCheckAnswer(side);
+originalCheckAnswer(side);
 
 };
 
-//
 // =======================
-// KEYBOARD SUPPORT
+// KEYBOARD SHORTCUTS
 // =======================
-//
 
 document.addEventListener(
 "keydown",
@@ -1237,23 +1240,19 @@ restartBtn.click();
 }
 );
 
-//
 // =======================
-// START VALUES
+// INITIAL VALUES
 // =======================
-//
 
 scoreDisplay.innerHTML =
 "0";
 
-//
 // =======================
 // DEBUG
 // =======================
-//
 
 console.log(
-"More and Less Game Ready"
+"More and Less Game Loaded Successfully"
 );
 
 </script>
