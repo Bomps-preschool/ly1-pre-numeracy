@@ -1,1261 +1,683 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>More and Less</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+        body {
+            background: #eef8ff;
+            height: 100vh;
+            overflow: hidden;
+            border: 5px solid #FFD700;
+        }
 
-<title>More and Less</title>
+        /* SPLASH SCREEN */
+        #splashScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
 
-<style>
+        #splashScreen img {
+            width: 250px;
+            max-width: 80%;
+        }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
-}
+        #splashScreen h1 {
+            margin-top: 20px;
+            font-size: 48px;
+            color: #1f4e79;
+        }
 
-body{
-background:#eef8ff;
-height:100vh;
-overflow:hidden;
-border:5px solid #FFD700;
-}
+        /* GAME */
+        #gameContainer {
+            display: none;
+            padding: 15px;
+            height: 100vh;
+        }
 
-/* SPLASH SCREEN */
+        .topBar {
+            background: white;
+            padding: 15px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
 
-#splashScreen{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:white;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-z-index:9999;
-}
+        .scoreBox {
+            font-size: 26px;
+            font-weight: bold;
+            color: #333;
+        }
 
-#splashScreen img{
-width:250px;
-max-width:80%;
-}
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
 
-#splashScreen h1{
-margin-top:20px;
-font-size:48px;
-color:#1f4e79;
-}
+        .controls button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
 
-/* GAME */
+        .controls button:hover {
+            opacity: 0.9;
+        }
 
-#gameContainer{
-display:none;
-padding:15px;
-height:100vh;
-}
+        /* QUESTION */
+        #questionText {
+            font-size: 42px;
+            font-weight: bold;
+            text-align: center;
+            color: #1f4e79;
+            margin-bottom: 20px;
+        }
 
-.topBar{
-background:white;
-padding:15px;
-border-radius:20px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-box-shadow:0 3px 10px rgba(0,0,0,.1);
-margin-bottom:15px;
-}
+        /* GROUPS */
+        #groupsContainer {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+        }
 
-.scoreBox{
-font-size:26px;
-font-weight:bold;
-color:#333;
-}
+        .groupCard {
+            width: 48%;
+            background: white;
+            border-radius: 25px;
+            padding: 20px;
+            min-height: 350px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-.controls{
-display:flex;
-gap:10px;
-}
+        .items {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+        }
 
-.controls button{
-background:#4CAF50;
-color:white;
-border:none;
-padding:12px 18px;
-border-radius:10px;
-cursor:pointer;
-font-size:16px;
-}
+        .items img {
+            width: 95px;
+            height: 95px;
+            object-fit: contain;
+        }
 
-.controls button:hover{
-opacity:.9;
-}
+        /* SELECT CIRCLE */
+        .selectCircle {
+            width: 85px;
+            height: 85px;
+            border: 5px solid #666;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            transition: 0.3s;
+        }
 
-/* QUESTION */
+        .selectCircle:hover {
+            transform: scale(1.08);
+        }
 
-#questionText{
-font-size:42px;
-font-weight:bold;
-text-align:center;
-color:#1f4e79;
-margin-bottom:20px;
-}
+        .correct {
+            background: #c6ffc6 !important;
+            border-color: #00aa00 !important;
+        }
 
-/* GROUPS */
+        .wrong {
+            background: #ffd4d4 !important;
+            border-color: red !important;
+        }
 
-#groupsContainer{
-display:flex;
-justify-content:center;
-gap:25px;
-}
+        .hintGlow {
+            animation: glow 1s infinite;
+        }
 
-.groupCard{
-width:48%;
-background:white;
-border-radius:25px;
-padding:20px;
-min-height:350px;
-box-shadow:0 5px 15px rgba(0,0,0,.1);
-display:flex;
-flex-direction:column;
-justify-content:space-between;
-align-items:center;
-}
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px gold; }
+            50% { box-shadow: 0 0 30px gold; }
+            100% { box-shadow: 0 0 5px gold; }
+        }
 
-.items{
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-align-items:center;
-gap:12px;
-width:100%;
-}
+        /* RETRY */
+        #retryBox {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            margin-top: 15px;
+            color: #d35400;
+        }
 
-/* PRESCHOOL IMAGE SIZE */
+        /* CONFETTI */
+        #confetti {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 500;
+        }
 
-.items img{
-width:95px;
-height:95px;
-object-fit:contain;
-}
+        .confettiPiece {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            animation: fall 3s linear forwards;
+        }
 
-/* SELECT CIRCLE */
+        @keyframes fall {
+            0% { transform: translateY(-50px); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
 
-.selectCircle{
-width:85px;
-height:85px;
-border:5px solid #666;
-border-radius:50%;
-background:white;
-cursor:pointer;
-transition:.3s;
-}
+        /* END SCREEN */
+        #endScreen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 10000;
+        }
 
-.selectCircle:hover{
-transform:scale(1.08);
-}
+        #endScreen h1 {
+            font-size: 60px;
+            color: #2e8b57;
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-.correct{
-background:#c6ffc6 !important;
-border-color:#00aa00 !important;
-}
+        #finalScore {
+            font-size: 40px;
+            margin-bottom: 25px;
+        }
 
-.wrong{
-background:#ffd4d4 !important;
-border-color:red !important;
-}
+        #playAgainBtn {
+            padding: 15px 40px;
+            font-size: 24px;
+            border: none;
+            border-radius: 15px;
+            background: #28a745;
+            color: white;
+            cursor: pointer;
+        }
 
-.hintGlow{
-animation:glow 1s infinite;
-}
-
-@keyframes glow{
-
-0%{
-box-shadow:0 0 5px gold;
-}
-
-50%{
-box-shadow:0 0 30px gold;
-}
-
-100%{
-box-shadow:0 0 5px gold;
-}
-
-}
-
-/* RETRY */
-
-#retryBox{
-text-align:center;
-font-size:28px;
-font-weight:bold;
-margin-top:15px;
-color:#d35400;
-}
-
-/* CONFETTI */
-
-#confetti{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-pointer-events:none;
-z-index:500;
-}
-
-.confettiPiece{
-position:absolute;
-width:12px;
-height:12px;
-animation:fall 3s linear forwards;
-}
-
-@keyframes fall{
-
-0%{
-transform:translateY(-50px);
-opacity:1;
-}
-
-100%{
-transform:translateY(100vh) rotate(720deg);
-opacity:0;
-}
-
-}
-
-/* END SCREEN */
-
-#endScreen{
-display:none;
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:white;
-justify-content:center;
-align-items:center;
-flex-direction:column;
-z-index:10000;
-}
-
-#endScreen h1{
-font-size:60px;
-color:#2e8b57;
-text-align:center;
-margin-bottom:20px;
-}
-
-#finalScore{
-font-size:40px;
-margin-bottom:25px;
-}
-
-#playAgainBtn{
-padding:15px 40px;
-font-size:24px;
-border:none;
-border-radius:15px;
-background:#28a745;
-color:white;
-cursor:pointer;
-}
-
-/* MOBILE */
-
-@media(max-width:900px){
-
-#groupsContainer{
-flex-direction:column;
-align-items:center;
-}
-
-.groupCard{
-width:95%;
-}
-
-.items img{
-width:75px;
-height:75px;
-}
-
-#questionText{
-font-size:30px;
-}
-
-}
-
-</style>
-
+        /* MOBILE */
+        @media (max-width: 900px) {
+            #groupsContainer {
+                flex-direction: column;
+                align-items: center;
+            }
+            .groupCard {
+                width: 95%;
+            }
+            .items img {
+                width: 75px;
+                height: 75px;
+            }
+            #questionText {
+                font-size: 30px;
+            }
+        }
+    </style>
 </head>
-
 <body>
-
-<div id="confetti"></div>
-
-<!-- SPLASH -->
-
-<div id="splashScreen">
-
-<img src="../assets/innovinelogo.png">
-
-<h1>More and Less</h1>
-
-</div>
-
-<!-- GAME -->
-
-<div id="gameContainer">
-
-<div class="topBar">
-
-<div class="scoreBox">
-Score: <span id="score">0</span>/8
-</div>
-
-<div class="controls">
-
-<button id="muteBtn">
-🔊 Mute
-</button>
-
-<button id="restartBtn">
-🔄 Restart
-</button>
-
-</div>
-
-</div>
-
-<h2 id="questionText"></h2>
-
-<div id="groupsContainer">
-
-<div class="groupCard">
-
-<div id="leftItems"
-class="items"></div>
-
-<div id="leftCircle"
-class="selectCircle"></div>
-
-</div>
-
-<div class="groupCard">
-
-<div id="rightItems"
-class="items"></div>
-
-<div id="rightCircle"
-class="selectCircle"></div>
-
-</div>
-
-</div>
-
-<div id="retryBox">
-Retry Remaining: 1
-</div>
-
-</div>
-
-<!-- END SCREEN -->
-
-<div id="endScreen">
-
-<h1>
-🎉 You Have Done a Great Job! 🎉
-</h1>
-
-<div id="finalScore"></div>
-
-<button id="playAgainBtn">
-Play Again
-</button>
-
-</div>
-<script>
-
-// =======================
-// QUESTIONS
-// Using Your Actual Assets
-// =======================
-
-const questions = [
-
-{
-instruction:"Tap the group that has more apples.",
-image:"apple.png",
-leftCount:2,
-rightCount:4,
-correct:"right"
-},
-
-{
-instruction:"Tap the group that has less balloons.",
-image:"balloons.png",
-leftCount:2,
-rightCount:5,
-correct:"left"
-},
-
-{
-instruction:"Tap the group that has more ducks.",
-image:"duck.png",
-leftCount:5,
-rightCount:2,
-correct:"left"
-},
-
-{
-instruction:"Tap the group that has less flowers.",
-image:"flower.png",
-leftCount:5,
-rightCount:2,
-correct:"right"
-},
-
-{
-instruction:"Tap the group that has more stars.",
-image:"star.png",
-leftCount:5,
-rightCount:2,
-correct:"left"
-},
-
-{
-instruction:"Tap the group that has less fish.",
-image:"fish.png",
-leftCount:2,
-rightCount:5,
-correct:"left"
-},
-
-{
-instruction:"Tap the group that has more footballs.",
-image:"football.png",
-leftCount:2,
-rightCount:5,
-correct:"right"
-},
-
-{
-instruction:"Tap the group that has less butterflies.",
-image:"butterfly.jpg",
-leftCount:2,
-rightCount:5,
-correct:"left"
-}
-
-];
-
-// =======================
-// VARIABLES
-// =======================
-
-let currentQuestion = 0;
-let score = 0;
-let attempts = 0;
-let retryRemaining = 1;
-let muted = false;
-
-let voiceTimer;
-
-// =======================
-// ELEMENTS
-// =======================
-
-const splashScreen =
-document.getElementById("splashScreen");
-
-const gameContainer =
-document.getElementById("gameContainer");
-
-const leftItems =
-document.getElementById("leftItems");
-
-const rightItems =
-document.getElementById("rightItems");
-
-const leftCircle =
-document.getElementById("leftCircle");
-
-const rightCircle =
-document.getElementById("rightCircle");
-
-const questionText =
-document.getElementById("questionText");
-
-const retryBox =
-document.getElementById("retryBox");
-
-const scoreDisplay =
-document.getElementById("score");
-
-const muteBtn =
-document.getElementById("muteBtn");
-
-const restartBtn =
-document.getElementById("restartBtn");
-
-const endScreen =
-document.getElementById("endScreen");
-
-const finalScore =
-document.getElementById("finalScore");
-
-const playAgainBtn =
-document.getElementById("playAgainBtn");
-
-// =======================
-// WEB SPEECH API
-// =======================
-
-function speak(text){
-
-if(muted) return;
-
-speechSynthesis.cancel();
-
-const speech =
-new SpeechSynthesisUtterance(text);
-
-speech.rate = 0.85;
-speech.pitch = 1.1;
-speech.volume = 1;
-
-speechSynthesis.speak(speech);
-
-}
-
-// =======================
-// REPEAT INSTRUCTION
-// EVERY 6 SECONDS
-// =======================
-
-function startVoiceRepeat(text){
-
-clearInterval(
-voiceTimer
-);
-
-voiceTimer =
-setInterval(()=>{
-
-if(!muted){
-
-speak(text);
-
-}
-
-},6000);
-
-}
-
-function stopVoiceRepeat(){
-
-clearInterval(
-voiceTimer
-);
-
-}
-
-// =======================
-// CORRECT SOUND
-// =======================
-
-function playCorrectSound(){
-
-if(muted) return;
-
-const ctx =
-new(
-window.AudioContext ||
-window.webkitAudioContext
-)();
-
-const osc =
-ctx.createOscillator();
-
-const gain =
-ctx.createGain();
-
-osc.type = "sine";
-
-osc.frequency.value = 850;
-
-osc.connect(gain);
-
-gain.connect(
-ctx.destination
-);
-
-osc.start();
-
-gain.gain.setValueAtTime(
-0.3,
-ctx.currentTime
-);
-
-gain.gain.exponentialRampToValueAtTime(
-0.001,
-ctx.currentTime + 0.5
-);
-
-osc.stop(
-ctx.currentTime + 0.5
-);
-
-}
-
-// =======================
-// WRONG SOUND
-// =======================
-
-function playWrongSound(){
-
-if(muted) return;
-
-const ctx =
-new(
-window.AudioContext ||
-window.webkitAudioContext
-)();
-
-const osc =
-ctx.createOscillator();
-
-const gain =
-ctx.createGain();
-
-osc.type = "square";
-
-osc.frequency.value = 220;
-
-osc.connect(gain);
-
-gain.connect(
-ctx.destination
-);
-
-osc.start();
-
-gain.gain.setValueAtTime(
-0.3,
-ctx.currentTime
-);
-
-gain.gain.exponentialRampToValueAtTime(
-0.001,
-ctx.currentTime + 0.5
-);
-
-osc.stop(
-ctx.currentTime + 0.5
-);
-
-}
-
-// =======================
-// CONFETTI
-// =======================
-
-function launchConfetti(){
-
-const container =
-document.getElementById(
-"confetti"
-);
-
-for(
-let i=0;
-i<80;
-i++
-){
-
-const piece =
-document.createElement("div");
-
-piece.classList.add(
-"confettiPiece"
-);
-
-piece.style.left =
-Math.random()*100 + "%";
-
-piece.style.top =
-"-20px";
-
-piece.style.background =
-`hsl(${Math.random()*360},
-100%,50%)`;
-
-container.appendChild(
-piece
-);
-
-setTimeout(()=>{
-
-piece.remove();
-
-},3500);
-
-}
-
-}
-
-// =======================
-// SPLASH SCREEN
-// =======================
-
-setTimeout(()=>{
-
-splashScreen.style.display =
-"none";
-
-gameContainer.style.display =
-"block";
-
-loadQuestion();
-
-},10000);
-// =======================
-// LOAD QUESTION
-// =======================
-
-function loadQuestion(){
-
-attempts = 0;
-retryRemaining = 1;
-
-retryBox.innerHTML =
-"Retry Remaining: 1";
-
-leftCircle.className =
-"selectCircle";
-
-rightCircle.className =
-"selectCircle";
-
-leftItems.innerHTML = "";
-rightItems.innerHTML = "";
-
-const q =
-questions[currentQuestion];
-
-questionText.innerHTML =
-q.instruction;
-
-// Voice
-
-speak(
-q.instruction
-);
-
-startVoiceRepeat(
-q.instruction
-);
-
-// =======================
-// LEFT OBJECTS
-// =======================
-
-for(
-let i=0;
-i<q.leftCount;
-i++
-){
-
-const img =
-document.createElement("img");
-
-img.src =
-"../assets/" +
-q.image;
-
-img.onerror =
-function(){
-
-this.src =
-"../assets/apple.png";
-
-};
-
-leftItems.appendChild(
-img
-);
-
-}
-
-// =======================
-// RIGHT OBJECTS
-// =======================
-
-for(
-let i=0;
-i<q.rightCount;
-i++
-){
-
-const img =
-document.createElement("img");
-
-img.src =
-"../assets/" +
-q.image;
-
-img.onerror =
-function(){
-
-this.src =
-"../assets/apple.png";
-
-};
-
-rightItems.appendChild(
-img
-);
-
-}
-
-}
-
-// =======================
-// LEFT CLICK
-// =======================
-
-leftCircle.addEventListener(
-"click",
-function(){
-
-checkAnswer(
-"left"
-);
-
-}
-);
-
-// =======================
-// RIGHT CLICK
-// =======================
-
-rightCircle.addEventListener(
-"click",
-function(){
-
-checkAnswer(
-"right"
-);
-
-}
-);
-
-// =======================
-// CHECK ANSWER
-// =======================
-
-function checkAnswer(
-selected
-){
-
-const q =
-questions[currentQuestion];
-
-if(
-selected ===
-q.correct
-){
-
-handleCorrect();
-
-}
-else{
-
-handleWrong();
-
-}
-
-}
-
-// =======================
-// CORRECT
-// =======================
-
-function handleCorrect(){
-
-stopVoiceRepeat();
-
-playCorrectSound();
-
-launchConfetti();
-
-score++;
-
-scoreDisplay.innerHTML =
-score;
-
-const q =
-questions[currentQuestion];
-
-if(
-q.correct ===
-"left"
-){
-
-leftCircle.classList.add(
-"correct"
-);
-
-}
-else{
-
-rightCircle.classList.add(
-"correct"
-);
-
-}
-
-speak(
-"Great Job!"
-);
-
-setTimeout(()=>{
-
-nextQuestion();
-
-},2000);
-
-}
-
-// =======================
-// WRONG
-// =======================
-
-function handleWrong(){
-
-attempts++;
-
-playWrongSound();
-
-// FIRST WRONG
-
-if(
-attempts === 1
-){
-
-retryRemaining = 0;
-
-retryBox.innerHTML =
-"Retry Remaining: 0";
-
-showHint();
-
-speak(
-"Try Again"
-);
-
-return;
-
-}
-
-// SECOND WRONG
-
-showCorrectAnswer();
-
-}
-
-// =======================
-// HINT
-// =======================
-
-function showHint(){
-
-const q =
-questions[currentQuestion];
-
-if(
-q.correct ===
-"left"
-){
-
-leftCircle.classList.add(
-"hintGlow"
-);
-
-}
-else{
-
-rightCircle.classList.add(
-"hintGlow"
-);
-
-}
-
-}
-
-// =======================
-// SHOW ANSWER
-// =======================
-
-function showCorrectAnswer(){
-
-stopVoiceRepeat();
-
-const q =
-questions[currentQuestion];
-
-if(
-q.correct ===
-"left"
-){
-
-leftCircle.classList.remove(
-"hintGlow"
-);
-
-leftCircle.classList.add(
-"correct"
-);
-
-}
-else{
-
-rightCircle.classList.remove(
-"hintGlow"
-);
-
-rightCircle.classList.add(
-"correct"
-);
-
-}
-
-speak(
-"This is the correct answer."
-);
-
-setTimeout(()=>{
-
-nextQuestion();
-
-},2500);
-
-}
-
-// =======================
-// NEXT QUESTION
-// =======================
-
-function nextQuestion(){
-
-currentQuestion++;
-
-if(
-currentQuestion >=
-questions.length
-){
-
-showEndScreen();
-
-return;
-
-}
-
-loadQuestion();
-
-}
-// =======================
-// END SCREEN
-// =======================
-
-function showEndScreen(){
-
-stopVoiceRepeat();
-
-gameContainer.style.display =
-"none";
-
-endScreen.style.display =
-"flex";
-
-finalScore.innerHTML =
-"Your Score: " +
-score +
-" / " +
-questions.length;
-
-launchConfetti();
-
-speak(
-"You have done a great job. Play again."
-);
-
-}
-
-// =======================
-// PLAY AGAIN
-// =======================
-
-playAgainBtn.addEventListener(
-"click",
-function(){
-
-speechSynthesis.cancel();
-
-currentQuestion = 0;
-score = 0;
-attempts = 0;
-retryRemaining = 1;
-
-scoreDisplay.innerHTML =
-"0";
-
-endScreen.style.display =
-"none";
-
-gameContainer.style.display =
-"block";
-
-loadQuestion();
-
-}
-);
-
-// =======================
-// RESTART
-// =======================
-
-restartBtn.addEventListener(
-"click",
-function(){
-
-speechSynthesis.cancel();
-
-currentQuestion = 0;
-score = 0;
-attempts = 0;
-retryRemaining = 1;
-
-scoreDisplay.innerHTML =
-"0";
-
-loadQuestion();
-
-}
-);
-
-// =======================
-// MUTE / UNMUTE
-// =======================
-
-muteBtn.addEventListener(
-"click",
-function(){
-
-muted = !muted;
-
-if(muted){
-
-speechSynthesis.cancel();
-
-muteBtn.innerHTML =
-"🔇 Unmute";
-
-}
-else{
-
-muteBtn.innerHTML =
-"🔊 Mute";
-
-speak(
-questions[currentQuestion]
-.instruction
-);
-
-}
-
-}
-);
-
-// =======================
-// PREVENT DOUBLE TAPS
-// =======================
-
-let clickLocked = false;
-
-const originalCheckAnswer =
-checkAnswer;
-
-checkAnswer = function(side){
-
-if(clickLocked)
-return;
-
-clickLocked = true;
-
-setTimeout(()=>{
-
-clickLocked = false;
-
-},700);
-
-originalCheckAnswer(side);
-
-};
-
-// =======================
-// KEYBOARD SHORTCUTS
-// =======================
-
-document.addEventListener(
-"keydown",
-function(e){
-
-if(
-e.key === "m" ||
-e.key === "M"
-){
-
-muteBtn.click();
-
-}
-
-if(
-e.key === "r" ||
-e.key === "R"
-){
-
-restartBtn.click();
-
-}
-
-}
-);
-
-// =======================
-// INITIAL VALUES
-// =======================
-
-scoreDisplay.innerHTML =
-"0";
-
-// =======================
-// DEBUG
-// =======================
-
-console.log(
-"More and Less Game Loaded Successfully"
-);
-
-</script>
-
+    <div id="confetti"></div>
+
+    <!-- SPLASH -->
+    <div id="splashScreen">
+        <img src="assets/innovinelogo.png" alt="Logo">
+        <h1>More and Less</h1>
+    </div>
+
+    <!-- GAME -->
+    <div id="gameContainer">
+        <div class="topBar">
+            <div class="scoreBox">Score: <span id="score">0</span>/8</div>
+            <div class="controls">
+                <button id="muteBtn">🔊 Mute</button>
+                <button id="restartBtn">🔄 Restart</button>
+            </div>
+        </div>
+
+        <h2 id="questionText"></h2>
+
+        <div id="groupsContainer">
+            <div class="groupCard">
+                <div id="leftItems" class="items"></div>
+                <div id="leftCircle" class="selectCircle"></div>
+            </div>
+            <div class="groupCard">
+                <div id="rightItems" class="items"></div>
+                <div id="rightCircle" class="selectCircle"></div>
+            </div>
+        </div>
+
+        <div id="retryBox">Retry Remaining: 1</div>
+    </div>
+
+    <!-- END SCREEN -->
+    <div id="endScreen">
+        <h1>🎉 You Have Done a Great Job! 🎉</h1>
+        <div id="finalScore"></div>
+        <button id="playAgainBtn">Play Again</button>
+    </div>
+
+    <script>
+        // QUESTIONS - Updated with correct asset filenames from your folder
+        const questions = [
+            {
+                instruction: "Tap the group that has more apples.",
+                image: "apple.png",
+                leftCount: 2,
+                rightCount: 4,
+                correct: "right"
+            },
+            {
+                instruction: "Tap the group that has less balloons.",
+                image: "balloons.png",
+                leftCount: 2,
+                rightCount: 5,
+                correct: "left"
+            },
+            {
+                instruction: "Tap the group that has more ducks.",
+                image: "duck.png",
+                leftCount: 5,
+                rightCount: 2,
+                correct: "left"
+            },
+            {
+                instruction: "Tap the group that has less flowers.",
+                image: "flower.png",
+                leftCount: 5,
+                rightCount: 2,
+                correct: "right"
+            },
+            {
+                instruction: "Tap the group that has more stars.",
+                image: "star.jpg",
+                leftCount: 5,
+                rightCount: 2,
+                correct: "left"
+            },
+            {
+                instruction: "Tap the group that has less fish.",
+                image: "fish.png",
+                leftCount: 2,
+                rightCount: 5,
+                correct: "left"
+            },
+            {
+                instruction: "Tap the group that has more footballs.",
+                image: "football.png",
+                leftCount: 2,
+                rightCount: 5,
+                correct: "right"
+            },
+            {
+                instruction: "Tap the group that has less butterflies.",
+                image: "butterfly.jpg",
+                leftCount: 2,
+                rightCount: 5,
+                correct: "left"
+            }
+        ];
+
+        // VARIABLES
+        let currentQuestion = 0;
+        let score = 0;
+        let attempts = 0;
+        let retryRemaining = 1;
+        let muted = false;
+        let voiceTimer;
+        let clickLocked = false;
+
+        // ELEMENTS
+        const splashScreen = document.getElementById("splashScreen");
+        const gameContainer = document.getElementById("gameContainer");
+        const leftItems = document.getElementById("leftItems");
+        const rightItems = document.getElementById("rightItems");
+        const leftCircle = document.getElementById("leftCircle");
+        const rightCircle = document.getElementById("rightCircle");
+        const questionText = document.getElementById("questionText");
+        const retryBox = document.getElementById("retryBox");
+        const scoreDisplay = document.getElementById("score");
+        const muteBtn = document.getElementById("muteBtn");
+        const restartBtn = document.getElementById("restartBtn");
+        const endScreen = document.getElementById("endScreen");
+        const finalScore = document.getElementById("finalScore");
+        const playAgainBtn = document.getElementById("playAgainBtn");
+
+        // WEB SPEECH API
+        function speak(text) {
+            if (muted) return;
+            speechSynthesis.cancel();
+            const speech = new SpeechSynthesisUtterance(text);
+            speech.rate = 0.85;
+            speech.pitch = 1.1;
+            speech.volume = 1;
+            speechSynthesis.speak(speech);
+        }
+
+        // REPEAT INSTRUCTION EVERY 6 SECONDS
+        function startVoiceRepeat(text) {
+            clearInterval(voiceTimer);
+            voiceTimer = setInterval(() => {
+                if (!muted) {
+                    speak(text);
+                }
+            }, 6000);
+        }
+
+        function stopVoiceRepeat() {
+            clearInterval(voiceTimer);
+        }
+
+        // CORRECT SOUND
+        function playCorrectSound() {
+            if (muted) return;
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = "sine";
+                osc.frequency.value = 850;
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+                osc.stop(ctx.currentTime + 0.5);
+            } catch (e) {
+                console.log("Audio error:", e);
+            }
+        }
+
+        // WRONG SOUND
+        function playWrongSound() {
+            if (muted) return;
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = "square";
+                osc.frequency.value = 220;
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+                osc.stop(ctx.currentTime + 0.5);
+            } catch (e) {
+                console.log("Audio error:", e);
+            }
+        }
+
+        // CONFETTI
+        function launchConfetti() {
+            const container = document.getElementById("confetti");
+            for (let i = 0; i < 80; i++) {
+                const piece = document.createElement("div");
+                piece.classList.add("confettiPiece");
+                piece.style.left = Math.random() * 100 + "%";
+                piece.style.top = "-20px";
+                piece.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                container.appendChild(piece);
+                setTimeout(() => {
+                    piece.remove();
+                }, 3500);
+            }
+        }
+
+        // SPLASH SCREEN - reduced to 3 seconds for testing
+        setTimeout(() => {
+            splashScreen.style.display = "none";
+            gameContainer.style.display = "block";
+            loadQuestion();
+        }, 3000);
+
+        // LOAD QUESTION
+        function loadQuestion() {
+            attempts = 0;
+            retryRemaining = 1;
+            retryBox.innerHTML = "Retry Remaining: 1";
+
+            leftCircle.className = "selectCircle";
+            rightCircle.className = "selectCircle";
+            leftItems.innerHTML = "";
+            rightItems.innerHTML = "";
+
+            const q = questions[currentQuestion];
+            questionText.innerHTML = q.instruction;
+
+            // Voice
+            speak(q.instruction);
+            startVoiceRepeat(q.instruction);
+
+            // LEFT OBJECTS
+            for (let i = 0; i < q.leftCount; i++) {
+                const img = document.createElement("img");
+                img.src = "assets/" + q.image;
+                img.alt = q.image.split('.')[0];
+                img.onerror = function() {
+                    this.src = "assets/apple.png";
+                };
+                leftItems.appendChild(img);
+            }
+
+            // RIGHT OBJECTS
+            for (let i = 0; i < q.rightCount; i++) {
+                const img = document.createElement("img");
+                img.src = "assets/" + q.image;
+                img.alt = q.image.split('.')[0];
+                img.onerror = function() {
+                    this.src = "assets/apple.png";
+                };
+                rightItems.appendChild(img);
+            }
+        }
+
+        // CHECK ANSWER
+        function checkAnswer(selected) {
+            if (clickLocked) return;
+            clickLocked = true;
+            setTimeout(() => {
+                clickLocked = false;
+            }, 700);
+
+            const q = questions[currentQuestion];
+            if (selected === q.correct) {
+                handleCorrect();
+            } else {
+                handleWrong();
+            }
+        }
+
+        // LEFT CLICK
+        leftCircle.addEventListener("click", function() {
+            checkAnswer("left");
+        });
+
+        // RIGHT CLICK
+        rightCircle.addEventListener("click", function() {
+            checkAnswer("right");
+        });
+
+        // CORRECT
+        function handleCorrect() {
+            stopVoiceRepeat();
+            playCorrectSound();
+            launchConfetti();
+            score++;
+            scoreDisplay.innerHTML = score;
+
+            const q = questions[currentQuestion];
+            if (q.correct === "left") {
+                leftCircle.classList.add("correct");
+            } else {
+                rightCircle.classList.add("correct");
+            }
+
+            speak("Great Job!");
+
+            setTimeout(() => {
+                nextQuestion();
+            }, 2000);
+        }
+
+        // WRONG
+        function handleWrong() {
+            attempts++;
+            playWrongSound();
+
+            // FIRST WRONG
+            if (attempts === 1) {
+                retryRemaining = 0;
+                retryBox.innerHTML = "Retry Remaining: 0";
+                showHint();
+                speak("Try Again");
+                return;
+            }
+
+            // SECOND WRONG
+            showCorrectAnswer();
+        }
+
+        // HINT
+        function showHint() {
+            const q = questions[currentQuestion];
+            if (q.correct === "left") {
+                leftCircle.classList.add("hintGlow");
+            } else {
+                rightCircle.classList.add("hintGlow");
+            }
+        }
+
+        // SHOW ANSWER
+        function showCorrectAnswer() {
+            stopVoiceRepeat();
+            const q = questions[currentQuestion];
+
+            if (q.correct === "left") {
+                leftCircle.classList.remove("hintGlow");
+                leftCircle.classList.add("correct");
+            } else {
+                rightCircle.classList.remove("hintGlow");
+                rightCircle.classList.add("correct");
+            }
+
+            speak("This is the correct answer.");
+
+            setTimeout(() => {
+                nextQuestion();
+            }, 2500);
+        }
+
+        // NEXT QUESTION
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion >= questions.length) {
+                showEndScreen();
+                return;
+            }
+            loadQuestion();
+        }
+
+        // END SCREEN
+        function showEndScreen() {
+            stopVoiceRepeat();
+            gameContainer.style.display = "none";
+            endScreen.style.display = "flex";
+            finalScore.innerHTML = "Your Score: " + score + " / " + questions.length;
+            launchConfetti();
+            speak("You have done a great job. Play again.");
+        }
+
+        // PLAY AGAIN
+        playAgainBtn.addEventListener("click", function() {
+            speechSynthesis.cancel();
+            currentQuestion = 0;
+            score = 0;
+            attempts = 0;
+            retryRemaining = 1;
+            scoreDisplay.innerHTML = "0";
+            endScreen.style.display = "none";
+            gameContainer.style.display = "block";
+            loadQuestion();
+        });
+
+        // RESTART
+        restartBtn.addEventListener("click", function() {
+            speechSynthesis.cancel();
+            currentQuestion = 0;
+            score = 0;
+            attempts = 0;
+            retryRemaining = 1;
+            scoreDisplay.innerHTML = "0";
+            loadQuestion();
+        });
+
+        // MUTE / UNMUTE
+        muteBtn.addEventListener("click", function() {
+            muted = !muted;
+            if (muted) {
+                speechSynthesis.cancel();
+                muteBtn.innerHTML = "🔇 Unmute";
+            } else {
+                muteBtn.innerHTML = "🔊 Mute";
+                speak(questions[currentQuestion].instruction);
+            }
+        });
+
+        // KEYBOARD SHORTCUTS
+        document.addEventListener("keydown", function(e) {
+            if (e.key === "m" || e.key === "M") {
+                muteBtn.click();
+            }
+            if (e.key === "r" || e.key === "R") {
+                restartBtn.click();
+            }
+        });
+
+        // INITIAL VALUES
+        scoreDisplay.innerHTML = "0";
+
+        console.log("More and Less Game Loaded Successfully");
+    </script>
 </body>
 </html>
