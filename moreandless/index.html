@@ -124,12 +124,18 @@
             align-items: center;
             gap: 12px;
             width: 100%;
+            min-height: 200px;
         }
 
         .items img {
             width: 95px;
             height: 95px;
             object-fit: contain;
+            /* Prevent flickering */
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
         }
 
         /* SELECT CIRCLE */
@@ -140,7 +146,8 @@
             border-radius: 50%;
             background: white;
             cursor: pointer;
-            transition: 0.3s;
+            transition: transform 0.3s, background 0.3s, border-color 0.3s;
+            flex-shrink: 0;
         }
 
         .selectCircle:hover {
@@ -236,6 +243,16 @@
             cursor: pointer;
         }
 
+        /* PRELOAD CONTAINER - Hidden */
+        #preloadContainer {
+            position: absolute;
+            left: -9999px;
+            top: -9999px;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        }
+
         /* MOBILE */
         @media (max-width: 900px) {
             #groupsContainer {
@@ -244,6 +261,10 @@
             }
             .groupCard {
                 width: 95%;
+                min-height: 280px;
+            }
+            .items {
+                min-height: 150px;
             }
             .items img {
                 width: 75px;
@@ -256,6 +277,9 @@
     </style>
 </head>
 <body>
+    <!-- PRELOAD CONTAINER -->
+    <div id="preloadContainer"></div>
+    
     <div id="confetti"></div>
 
     <!-- SPLASH -->
@@ -298,7 +322,7 @@
     </div>
 
     <script>
-        // QUESTIONS - Updated with correct asset filenames from your folder
+        // QUESTIONS
         const questions = [
             {
                 instruction: "Tap the group that has more apples.",
@@ -358,6 +382,9 @@
             }
         ];
 
+        // IMAGE CACHE
+        const imageCache = {};
+
         // VARIABLES
         let currentQuestion = 0;
         let score = 0;
@@ -366,6 +393,7 @@
         let muted = false;
         let voiceTimer;
         let clickLocked = false;
+        let imagesLoaded = false;
 
         // ELEMENTS
         const splashScreen = document.getElementById("splashScreen");
@@ -382,6 +410,43 @@
         const endScreen = document.getElementById("endScreen");
         const finalScore = document.getElementById("finalScore");
         const playAgainBtn = document.getElementById("playAgainBtn");
+        const preloadContainer = document.getElementById("preloadContainer");
+
+        // PRELOAD ALL IMAGES
+        function preloadImages() {
+            return new Promise((resolve) => {
+                const uniqueImages = [...new Set(questions.map(q => q.image))];
+                let loadedCount = 0;
+                const totalImages = uniqueImages.length;
+
+                if (totalImages === 0) {
+                    resolve();
+                    return;
+                }
+
+                uniqueImages.forEach(imageName => {
+                    const img = new Image();
+                    img.onload = () => {
+                        imageCache[imageName] = img.src;
+                        loadedCount++;
+                        if (loadedCount >= totalImages) {
+                            imagesLoaded = true;
+                            resolve();
+                        }
+                    };
+                    img.onerror = () => {
+                        imageCache[imageName] = "assets/apple.png";
+                        loadedCount++;
+                        if (loadedCount >= totalImages) {
+                            imagesLoaded = true;
+                            resolve();
+                        }
+                    };
+                    img.src = "assets/" + imageName;
+                    preloadContainer.appendChild(img);
+                });
+            });
+        }
 
         // WEB SPEECH API
         function speak(text) {
@@ -464,12 +529,17 @@
             }
         }
 
-        // SPLASH SCREEN - reduced to 3 seconds for testing
-        setTimeout(() => {
-            splashScreen.style.display = "none";
-            gameContainer.style.display = "block";
-            loadQuestion();
-        }, 3000);
+        // CREATE IMAGE ELEMENT FROM CACHE
+        function createCachedImage(imageName) {
+            const img = document.createElement("img");
+            img.src = imageCache[imageName] || ("assets/" + imageName);
+            img.alt = imageName.split('.')[0];
+            img.draggable = false;
+            img.onerror = function() {
+                this.src = "assets/apple.png";
+            };
+            return img;
+        }
 
         // LOAD QUESTION
         function loadQuestion() {
@@ -479,8 +549,6 @@
 
             leftCircle.className = "selectCircle";
             rightCircle.className = "selectCircle";
-            leftItems.innerHTML = "";
-            rightItems.innerHTML = "";
 
             const q = questions[currentQuestion];
             questionText.innerHTML = q.instruction;
@@ -489,27 +557,25 @@
             speak(q.instruction);
             startVoiceRepeat(q.instruction);
 
+            // Clear and rebuild items using DocumentFragment to prevent flickering
+            const leftFragment = document.createDocumentFragment();
+            const rightFragment = document.createDocumentFragment();
+
             // LEFT OBJECTS
             for (let i = 0; i < q.leftCount; i++) {
-                const img = document.createElement("img");
-                img.src = "assets/" + q.image;
-                img.alt = q.image.split('.')[0];
-                img.onerror = function() {
-                    this.src = "assets/apple.png";
-                };
-                leftItems.appendChild(img);
+                leftFragment.appendChild(createCachedImage(q.image));
             }
 
             // RIGHT OBJECTS
             for (let i = 0; i < q.rightCount; i++) {
-                const img = document.createElement("img");
-                img.src = "assets/" + q.image;
-                img.alt = q.image.split('.')[0];
-                img.onerror = function() {
-                    this.src = "assets/apple.png";
-                };
-                rightItems.appendChild(img);
+                rightFragment.appendChild(createCachedImage(q.image));
             }
+
+            // Clear and append all at once
+            leftItems.innerHTML = "";
+            rightItems.innerHTML = "";
+            leftItems.appendChild(leftFragment);
+            rightItems.appendChild(rightFragment);
         }
 
         // CHECK ANSWER
@@ -657,10 +723,12 @@
             muted = !muted;
             if (muted) {
                 speechSynthesis.cancel();
+                stopVoiceRepeat();
                 muteBtn.innerHTML = "🔇 Unmute";
             } else {
                 muteBtn.innerHTML = "🔊 Mute";
                 speak(questions[currentQuestion].instruction);
+                startVoiceRepeat(questions[currentQuestion].instruction);
             }
         });
 
@@ -676,6 +744,20 @@
 
         // INITIAL VALUES
         scoreDisplay.innerHTML = "0";
+
+        // START GAME - Preload images first, then show game
+        async function startGame() {
+            await preloadImages();
+            
+            // Wait minimum splash time (3 seconds) or until images load
+            setTimeout(() => {
+                splashScreen.style.display = "none";
+                gameContainer.style.display = "block";
+                loadQuestion();
+            }, 3000);
+        }
+
+        startGame();
 
         console.log("More and Less Game Loaded Successfully");
     </script>
